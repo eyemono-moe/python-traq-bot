@@ -1,4 +1,3 @@
-from ctypes import Union
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from typing import Dict, Optional, Union
 from inspect import _empty, signature
@@ -39,20 +38,20 @@ class TraqBot:
         if event == "PING":
             # 204返す
             resp = {
-                "status":204,
+                "status": 204,
                 "headers": {},
-                "body":""
+                "body": ""
             }
             return resp
 
         if len(self._handlers[event]) == 0:
             resp = {
-                "status":501,
+                "status": 501,
                 "headers": {},
-                "body":""
+                "body": ""
             }
             return resp
-        
+
         try:
             # 各イベントに対するハンドラを実行
             for func in self._handlers[event]:
@@ -67,21 +66,20 @@ class TraqBot:
                     raise Exception("イベントハンドラは0または1つの辞書型の引数を取るようにしてください")
             # ここで204返す
             resp = {
-                "status":204,
+                "status": 204,
                 "headers": {},
-                "body":""
+                "body": ""
             }
             return resp
         except Exception as e:
             print(e)
             # ここで500とか返す
             resp = {
-                "status":500,
+                "status": 500,
                 "headers": {},
-                "body":""
+                "body": ""
             }
             return resp
-
 
     def _register_function(self, func, event: str):
         self._handlers[event].append(func)
@@ -159,18 +157,19 @@ class TraqBotServer:
 
         class TraqBotHandler(SimpleHTTPRequestHandler):
             def do_POST(self):
-                content_length: int = int(self.headers.get('Content-Length')) or 0
+                content_length: int = int(
+                    self.headers.get('Content-Length')) or 0
 
                 verification_token: Optional[str] = self.headers.get(
                     'X-TRAQ-BOT-TOKEN'
                 )
-                if verification_token == None:
+                if verification_token is None:
                     print("No X-TRAQ-BOT-TOKEN")
                     self._send_response(401, {}, "")
                     return
 
                 event: Optional[str] = self.headers.get("X-TRAQ-BOT-EVENT")
-                if event == None:
+                if event is None:
                     print("No X-TRAQ-BOT-EVENT")
                     self._send_response(400, {}, "")
                     return

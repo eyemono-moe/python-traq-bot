@@ -5,9 +5,8 @@ import os
 bot = TraqBot(os.environ.get("BOT_VERIFICATION_TOKEN"))
 
 @bot.message_created
-def say_hello(data):
+def print_message_data(data: dict):
     print(data)
-    print("hello!")
 
 
 if __name__ == '__main__':

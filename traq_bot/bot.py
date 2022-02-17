@@ -1,6 +1,7 @@
 from ctypes import Union
 from http.server import HTTPServer, SimpleHTTPRequestHandler
-from typing import Dict, List, Optional, Union
+from typing import Dict, Optional, Union
+from inspect import _empty, signature
 import os
 import json
 
@@ -55,7 +56,15 @@ class TraqBot:
         try:
             # 各イベントに対するハンドラを実行
             for func in self._handlers[event]:
-                func(data)
+                sig = signature(func)
+
+                if len(sig.parameters) == 0:
+                    func()
+                # もし引数を1つ持っていたら`data`を与えて関数を実行する
+                elif ((len(sig.parameters) == 1) and (next(iter(sig.parameters.values())).annotation in [dict, _empty])):
+                    func(data)
+                else:
+                    raise Exception("イベントハンドラは0または1つの辞書型の引数を取るようにしてください")
             # ここで204返す
             resp = {
                 "status":204,
@@ -63,7 +72,8 @@ class TraqBot:
                 "body":""
             }
             return resp
-        except:
+        except Exception as e:
+            print(e)
             # ここで500とか返す
             resp = {
                 "status":500,

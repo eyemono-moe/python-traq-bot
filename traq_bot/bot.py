@@ -1,6 +1,6 @@
 from ctypes import Union
 from http.server import HTTPServer, SimpleHTTPRequestHandler
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 import os
 import json
 
@@ -11,7 +11,7 @@ class TraqBot:
             "BOT_VERIFICATION_TOKEN", None
         )
 
-        self._listeners: dict = {
+        self._handlers: dict = {
             "PING": [],
             "JOINED": [],
             "LEFT": [],
@@ -35,16 +35,46 @@ class TraqBot:
         self._bot_server.run()
 
     def _handle_event(self, event: str, data: dict) -> dict:
-        bot_resp = {
-            "status": 204,
-            "headers": {},
-            "body": {}
-        }
+        if event == "PING":
+            # 204返す
+            resp = {
+                "status":204,
+                "headers": {},
+                "body":""
+            }
+            return resp
 
-        return bot_resp
+        if len(self._handlers[event]) == 0:
+            resp = {
+                "status":501,
+                "headers": {},
+                "body":""
+            }
+            return resp
+        
+        try:
+            # 各イベントに対するハンドラを実行
+            for func in self._handlers[event]:
+                func(data)
+            # ここで204返す
+            resp = {
+                "status":204,
+                "headers": {},
+                "body":""
+            }
+            return resp
+        except:
+            # ここで500とか返す
+            resp = {
+                "status":500,
+                "headers": {},
+                "body":""
+            }
+            return resp
+
 
     def _register_function(self, func, event: str):
-        self._listeners[event].append(func)
+        self._handlers[event].append(func)
 
     def ping(self, func):
         self._register_function(func, "PING")
@@ -113,13 +143,13 @@ class TraqBot:
 
 class TraqBotServer:
     def __init__(self, port: int, bot: TraqBot):
-        self.port: int = port
+        self._port: int = port
         self._bot: TraqBot = bot
         _bot = self._bot
 
         class TraqBotHandler(SimpleHTTPRequestHandler):
             def do_POST(self):
-                content_length: int = self.headers.get('Content-Length') or 0
+                content_length: int = int(self.headers.get('Content-Length')) or 0
 
                 verification_token: Optional[str] = self.headers.get(
                     'X-TRAQ-BOT-TOKEN'
@@ -127,18 +157,24 @@ class TraqBotServer:
                 if verification_token == None:
                     print("No X-TRAQ-BOT-TOKEN")
                     self._send_response(401, {}, "")
+                    return
 
                 event: Optional[str] = self.headers.get("X-TRAQ-BOT-EVENT")
                 if event == None:
                     print("No X-TRAQ-BOT-EVENT")
                     self._send_response(400, {}, "")
+                    return
 
                 request_body: bytes = self.rfile.read(content_length)
-                try:
-                    data: dict = json.loads(request_body.decode('utf-8'))
-                except json.JSONDecodeError:
-                    print("JSONDecodeError")
-                    self._send_response(400, {}, "")
+                if len(request_body) == 0:
+                    data: dict = {}
+                else:
+                    try:
+                        data: dict = json.loads(request_body.decode('utf-8'))
+                    except json.JSONDecodeError:
+                        print("JSONDecodeError")
+                        self._send_response(400, {}, "")
+                        return
 
                 bot_resp = _bot._handle_event(event, data)
                 self._send_bot_response(bot_resp)
@@ -169,6 +205,7 @@ class TraqBotServer:
 
     def run(self) -> None:
         try:
+            print("serving at port", self._port)
             self._server.serve_forever(0.05)
         finally:
             self._server.server_close()

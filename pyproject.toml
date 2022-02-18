@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "python-traq-bot"
+version = "0.1.0"
+description = "Bot library for traQ"
+authors = ["d_etteiu8383 <ysdr83@gmail.com>"]
+license = "MIT"
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^4.0.1"
+pytest = "^7.0.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

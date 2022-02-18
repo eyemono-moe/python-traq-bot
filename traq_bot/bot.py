@@ -12,7 +12,7 @@ class TraqBot:
     from traq_bot import TraqBot
 
     # Initializes your bot with your bot token
-    bot = TraqBot(token=os.environ.get("BOT_VERIFICATION_TOKEN"))
+    bot = TraqBot(verification_token=os.environ.get("BOT_VERIFICATION_TOKEN"))
 
     # Register event handler
     @bot.message_created

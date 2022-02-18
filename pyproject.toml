@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "traq-bot"
-version = "0.1.2"
+name = "traq_bot"
+version = "0.1.3"
 description = "Bot library for traQ"
 authors = ["d_etteiu8383 <ysdr83@gmail.com>"]
 license = "MIT"

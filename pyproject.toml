@@ -5,7 +5,7 @@ description = "Bot library for traQ"
 authors = ["d_etteiu8383 <ysdr83@gmail.com>"]
 license = "MIT"
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "3.^9"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^4.0.1"

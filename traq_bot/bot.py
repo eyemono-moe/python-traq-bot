@@ -303,6 +303,11 @@ class TraqBotServer:
                     print("No X-TRAQ-BOT-TOKEN")
                     self._send_response(401, {}, "")
                     return
+ 
+                if verification_token != _bot.verification_token:
+                    print("Verification token mismatch")
+                    self._send_response(401, {}, "")
+                    return
 
                 event: Optional[str] = self.headers.get("X-TRAQ-BOT-EVENT")
                 if event is None:

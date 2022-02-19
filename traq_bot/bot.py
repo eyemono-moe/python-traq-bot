@@ -304,7 +304,7 @@ class TraqBotServer:
                     self._send_response(401, {}, "")
                     return
  
-                if verification_token != _bot.verification_token:
+                if verification_token != _bot._verification_token:
                     print("Verification token mismatch")
                     self._send_response(401, {}, "")
                     return

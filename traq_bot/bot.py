@@ -32,7 +32,7 @@ class TraqBot:
             "BOT_VERIFICATION_TOKEN", None
         )
 
-        self._handlers: Dict[str, List[Callable[[Optional[Dict]], None]]] = {
+        self._handlers: Dict[str, List[Callable[..., None]]] = {
             "PING": [],
             "JOINED": [],
             "LEFT": [],

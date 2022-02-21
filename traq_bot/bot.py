@@ -32,7 +32,7 @@ class TraqBot:
             "BOT_VERIFICATION_TOKEN", None
         )
 
-        self._handlers: Dict[str, List[Callable[[Optional[Dict]], None]]] = {
+        self._handlers: Dict[str, List[Callable[..., None]]] = {
             "PING": [],
             "JOINED": [],
             "LEFT": [],
@@ -340,7 +340,7 @@ class TraqBotServer:
                 for k, vs in headers.items():
                     for v in vs:
                         self.send_header(k, v)
-                self.send_header('Content-Length', len(byte_body))
+                self.send_header('Content-Length', str(len(byte_body)))
                 self.end_headers()
                 self.wfile.write(byte_body)
 

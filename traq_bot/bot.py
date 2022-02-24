@@ -24,7 +24,7 @@ class TraqBot:
         bot.run()  
 
     Args:
-        verificaiton_token (str): Your bot token.
+        verification_token (str): Your bot token.
     """
 
     def __init__(self, verification_token: Optional[str]):

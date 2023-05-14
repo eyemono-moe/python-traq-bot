@@ -1,6 +1,6 @@
-[![Downloads](https://static.pepy.tech/badge/traq-bot)](https://pepy.tech/project/traq-bot)
-
 # traQ BOTサーバーライブラリ
+
+[![Downloads](https://static.pepy.tech/badge/traq-bot)](https://pepy.tech/project/traq-bot)
 
 PythonでtraQ BOTサーバーを簡単に作るためのライブラリです。
 

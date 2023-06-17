@@ -79,7 +79,7 @@ class TraqBot:
                     func()
                 # もし引数を1つ持っていたら`data`を与えて関数を実行する
                 elif (len(sig.parameters) == 1) and (
-                    next(iter(sig.parameters.values())).annotation in [Dict, _empty]
+                    next(iter(sig.parameters.values())).annotation in [Optional[Dict], Dict, _empty]
                 ):
                     func(data)
                 else:
